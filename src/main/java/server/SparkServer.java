@@ -41,7 +41,8 @@ public class SparkServer {
             SERVER_PORT = "5000";
         }
 
-        SparkServer server = new SparkServer(Integer.parseInt(SERVER_PORT), "TeamOne/src/main/java/view/");
+        SparkServer server = new SparkServer(Integer.parseInt(SERVER_PORT),
+                SparkServer.class.getResource("/view").getFile());
         server.initEnpoint();
     }
 

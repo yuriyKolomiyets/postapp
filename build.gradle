@@ -6,7 +6,7 @@ repositories {
   jcenter()
 }
 
-mainClassName = "projectzero.Main"
+mainClassName = "server.SparkServer"
 
 dependencies {
 
