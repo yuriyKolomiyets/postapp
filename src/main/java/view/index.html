@@ -1,0 +1,182 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Parcel Delivery Service</title>
+
+    <!-- Bootstrap -->
+    <link rel="stylesheet" href="/lib/bootstrap-4-2/css/bootstrap.min.css" ><!-- Custom styles for this template -->
+    <link rel="stylesheet" href="/css/sticky-footer.css">
+
+</head>
+
+<body>
+<div class="container">
+    <div class="row">
+        <div class="span6">
+            <h1>Parcel Delivery Service</h1>
+        </div>
+    </div>
+</div>
+
+<div class="container" id="loginForm" style="display:block;">
+    <h4>Log In</h4>
+    <div class="form-group row">
+        <div class="col-xs-4">
+            <form action="/login" method="post">
+                <div class="form-group">
+                    <label for="inputEmail1">Email address</label>
+                    <input type="email" class="form-control" id="inputEmail1" aria-describedby="emailHelp" placeholder="Enter email" required>
+                    <small id="emailHelp" class="form-text text-muted">We'll never share your email with anyone else.</small>
+                </div>
+                <div class="form-group">
+                    <label for="inputPassword1">Password</label>
+                    <input type="password" class="form-control" id="inputPassword1" placeholder="Password" required>
+                </div>
+            </form>
+
+            <div class="row justify-content-between">
+                <div class="col">
+                    <button type="submit" class="btn btn-primary" id="loginBtn">Log in</button>
+                </div>
+                <div class="col">
+                    <button type="submit" class="btn btn-primary" id="toggleRegister">Register</button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="container" id="registerForm" style="display:none;">
+    <h4>Sign Up</h4>
+    <div class="form-group row">
+        <div class="col-xs-4">
+            <form action="/register" method="post" id="registration">
+                <div class="form-group">
+                    <label for="username">Name</label>
+                    <input type="text" class="form-control" id="username" placeholder="Enter Name">
+                </div>
+                <div class="form-group">
+                    <label for="phoneNumber">Phone Number</label>
+                    <input type="text" class="form-control" id="phoneNumber" placeholder="Enter Phone Number">
+                </div>
+                <div class="form-group">
+                    <label for="inputEmail2">Email address</label>
+                    <input type="email" class="form-control" id="inputEmail2" aria-describedby="emailHelp" placeholder="Enter email" required>
+                    <small id="emailHelp2" class="form-text text-muted">We'll never share your email with anyone else.</small>
+                </div>
+                <div class="form-group">
+                    <label for="inputPassword2">Password</label>
+                    <input type="password" class="form-control" id="inputPassword2" placeholder="Password" required>
+                </div>
+
+            </form>
+
+            <div class="row justify-content-between">
+                <div class="col">
+                    <button type="submit" class="btn btn-primary" id="backToLogin">Back to Log in</button>
+                </div>
+                <div class="col">
+                    <button type="submit" class="btn btn-primary" id='registerBtn'>Register</button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<!--TODO Implement page view for logged in User/Employee  -->
+<div class="container" id="authUser" style="display:none;">
+    <h4>Page view for logged in user. TBD</h4>
+</div>
+
+<footer class="footer">
+    <div class="container" id="footer">
+        <span class="text-muted">Copyright © 2018</span>
+    </div>
+</footer>
+
+<!-- jQuery (necessary for Bootstrap's JavaScript plugins) -->
+<script src="/lib/js/jquery-3.3.1.min.js"></script>
+<!-- Include all compiled plugins (below), or include individual files as needed -->
+<script src="/lib/bootstrap-4-2/js/bootstrap.min.js"></script>
+<script>
+
+//on onload
+$(document).ready(function() {
+
+  $('#loginBtn').click(loginUser);
+
+  $('#toggleRegister').click(function() {
+    openRegister();
+  });
+
+  $('#backToLogin').click(function() {
+    openLogin();
+  });
+
+  $('#registerBtn').click(function() {
+    addNewUserToDb();
+    openLogin();
+  });
+
+});
+
+function loginUser() {
+  $.ajax({
+    type: 'POST',
+    url: '/login',
+    contentType: 'application/json',
+    data: JSON.stringify({email: $('#inputEmail1').val(), pass: $('#inputPassword1').val()}),
+
+//TODO wtite success and errror handling
+    success(response) {
+      alert('Login ok ' + response);
+      userLoggedIn();
+    },
+    error(jqXHR, status, errrorThrown) {
+      alert('Login failed ' + status);
+    }
+
+  });
+}
+
+function addNewUserToDb() {
+  $.ajax({
+    type: 'POST',
+    url: '/register',
+    contentType: 'application/json',
+    data: JSON.stringify({email: $('#inputEmail2').val(), pass: $('#inputPassword2').val(),
+                          name: $('#username').val(), phone: $('#phoneNumber').val()}),
+
+  //TODO wtite success and errror handling
+  //TODO Add condition to verify whether user was created with no error
+    success(response) {
+      alert('Add to db ok ' + response.body);
+    },
+    error(jqXHR, status, errrorThrown) {
+      alert('Add to db ok failed ' + response.body);
+    }
+
+    });
+}
+
+function userLoggedIn() {
+  $('#registerForm').hide();
+  $('#authUser').show();
+  $('#loginForm').hide();
+}
+
+function openRegister() {
+  $('#loginForm').hide();
+  $('#registerForm').show();
+}
+
+function openLogin() {
+  $('#loginForm').show();
+  $('#registerForm').hide();
+}
+
+</script>
+
+</body>
+
+</html>

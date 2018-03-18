@@ -6,15 +6,39 @@ repositories {
   jcenter()
 }
 
-mainClassName = "Main"
+mainClassName = "projectzero.Main"
 
 dependencies {
-  runtime "org.slf4j:slf4j-simple:1.7.25"
+
+  compile group: 'com.google.code.gson', name: 'gson', version: '2.8.2'
+  // https://mvnrepository.com/artifact/com.google.guava/guava
+  compile group: 'com.google.guava', name: 'guava', version: '24.0-jre'
+
+  compile group: 'org.slf4j', name: 'slf4j-simple', version: '1.7.21'
+  compile group: 'com.sparkjava', name: 'spark-core', version: '2.7.1'
+
+
+  testCompile group: 'junit', name: 'junit', version: '4.12'
+  compile group: 'log4j', name: 'log4j', version: '1.2.17'
+
   compile ratpack.dependency("hikari")
-  compile "org.postgresql:postgresql:42.2.0"
-  testCompile 'junit:junit:4.12'
+  // https://mvnrepository.com/artifact/javax.activation/activation
+  compile group: 'javax.activation', name: 'activation', version: '1.1.1'
+  // https://mvnrepository.com/artifact/com.sun.mail/javax.mail
+  compile group: 'com.sun.mail', name: 'javax.mail', version: '1.6.1'
 }
+
+task copyTaskWithPatterns(type: Copy) {
+  from 'src/main/java'
+  from 'src/main/resources'
+  into 'build/classes/java/main'
+  include '**/*'
+  exclude '**/*.java'
+}
+
 
 task stage {
   dependsOn installDist
 }
+
+compileJava.dependsOn copyTaskWithPatterns
