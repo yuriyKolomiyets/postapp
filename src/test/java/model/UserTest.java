@@ -11,13 +11,13 @@ public class UserTest {
     @Test
     public void getId() {
         testUser.setId(1);
-        assertEquals("1", testUser.getId());
+        assertEquals(1, testUser.getId());
     }
 
     @Test
     public void setId() {
         testUser.setId(1);
-        assertEquals("1", testUser.getId());
+        assertEquals(1, testUser.getId());
     }
 
     @Test
