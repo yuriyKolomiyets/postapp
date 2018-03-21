@@ -18,16 +18,13 @@ import static org.junit.Assert.assertThat;
 import static utils.TestUtils.restoreOrderDb;
 import static utils.TestUtils.restoreUserDb;
 
-// todo add test class, that will check http requests to created endpoint
-// in new test class run spark -> send requests -> check results -> down spark
+
 public class MainControllerImplTest {
 
     AppDbImpl appDb = new AppDbImpl();
     MainController mainController = new MainControllerImpl(appDb);
     User testUser = new User("test3@gmail.com", "123456");
     Order testOrder = new Order("Oleg", "Andrey", "Kyiv");
-    Gson gson = new Gson();
-
 
     @Before
     public void before() throws AppException {
@@ -65,8 +62,6 @@ public class MainControllerImplTest {
 
     @Test
     public void getOrderbyId() throws AppException, IOException {
-        String token = appDb.createAccessToken(testUser);
-
         assertEquals(testOrder.getId(), mainController.getOrderById(testOrder.getId()).getId());
 
     }

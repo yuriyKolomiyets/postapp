@@ -1,6 +1,5 @@
 package appDb;
 
-import com.google.gson.Gson;
 import exceptions.AppException;
 import exceptions.UserNotFoundException;
 import model.Order;
@@ -8,8 +7,6 @@ import model.User;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
-
-import java.util.Map;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
@@ -24,13 +21,8 @@ public class AppDbTest {
     User testUser = new User("test3@gmail.com", "123456");
     Order testOrder = new Order("Oleg", "Andrey", "Kyiv");
 
-    Gson gson = new Gson();
-
     @Before
     public void before() throws AppException {
-
-        Map<String, User> users = appDb.getUsers();
-        Map<Integer, Order> orders = appDb.getOrders();
 
         appDb.addUser(testUser);
         String token = appDb.createAccessToken(testUser);

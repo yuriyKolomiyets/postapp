@@ -15,10 +15,7 @@ import static spark.Spark.*;
 
 public class SparkServer {
 
-    private final int port;
-    private final String staticFolder;
     private final static Logger LOGGER = Log4JApp.getLogger(Log4JApp.class);
-
 
     private AppDbImpl appDb;
 
@@ -26,8 +23,8 @@ public class SparkServer {
     private MainController mainController = Factory.create(appDb);
 
     public SparkServer(int port, String staticFolder) {
-        this.port = port;
-        this.staticFolder = staticFolder;
+        int port1 = port;
+        String staticFolder1 = staticFolder;
         this.appDb = new AppDbImpl();
         port(port);
 
