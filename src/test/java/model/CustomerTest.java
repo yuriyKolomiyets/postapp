@@ -5,7 +5,7 @@ import static org.junit.Assert.assertEquals;
 
 public class CustomerTest {
 
-    Customer testUser = new Customer("test3@gmail.com", "123456", "344", "Igor");
+    private Customer testUser = new Customer("test3@gmail.com", "123456", "344", "Igor");
 
 
     @Test
