@@ -27,54 +27,35 @@ public class JSONUtils {
     }
 
     public static List<User> readUsersFromFile(String path, Class<User[]> objClass) throws IOException {
-
         User[] cache = gson.fromJson(new FileReader(path), objClass);
-
         return new ArrayList<>(asList(cache));
 
     }
 
     public static List<Order> readOrdersFromFile(String path, Class<Order[]> objClass) throws IOException {
-
         Order[] cache = gson.fromJson(new FileReader(path), objClass);
-
         return new ArrayList<>(asList(cache));
-
-
     }
 
     public static void writeListIntoFile(String path, List<?> list) throws IOException {
 
-        Writer writer = new FileWriter(path, false);
-
-        writer.write(gson.toJson(list));
-
-        writer.flush();
-
-        // todo use flash and close the stream
-
+        try (Writer writer = new FileWriter(path, false)) {
+            writer.write(gson.toJson(list));
+            writer.flush();
+        }
     }
-
-    // todo apache commons, guava have a lot of utils and useful methods
 
     public static List<Order> getOrdersFromDb(String path) throws IOException {
-
-        List<Order> orders = readOrdersFromFile(path, Order[].class);
-        return orders;
-
+        return readOrdersFromFile(path, Order[].class);
     }
 
-
     public static List <User> getUsersFromDb(String path) throws IOException {
-
-        List<User> users = readUsersFromFile(path, User[].class);
-        return users;
+        return readUsersFromFile(path, User[].class);
     }
 
     public static void saveUsersToDb(String userDbPath, Map<String, User> users) {
 
         List<User> usersList = new ArrayList<>(users.values());
-
         try {
             writeListIntoFile(userDbPath, usersList);
         } catch (IOException e) {
@@ -84,7 +65,6 @@ public class JSONUtils {
 
     public static void saveOrdersToDb(String ordersDbPath, Map<Integer, Order> orders) {
         List<Order> orderList = new ArrayList<>(orders.values());
-
         try {
             writeListIntoFile(ordersDbPath, orderList);
         } catch (IOException e) {

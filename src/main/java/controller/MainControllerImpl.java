@@ -13,7 +13,6 @@ import java.time.LocalDateTime;
 import java.util.HashMap;
 import java.util.Map;
 
-// todo add validation for input arguments
 public class MainControllerImpl implements MainController {
 
     private AppDbImpl appDb;
@@ -24,32 +23,34 @@ public class MainControllerImpl implements MainController {
 
     @Override
     public Map<String, User> getAllUsers() throws AppException {
-        return appDb.getUsers();
+        if (appDb == null) throw new AppException("DB is empty");
+        else return appDb.getUsers();
     }
 
     @Override
     public Map<Integer, Order> getAllOrders() throws AppException{
-        return appDb.getOrders();
+        if (appDb == null) throw new AppException("DB is empty");
+        else return appDb.getOrders();
     }
 
     @Override
-    public User getById(int id) throws UserNotFoundException {
-
-        // todo java 8 at the end apply findFirst
-
+    public User getById(int id) throws AppException {
+        if (appDb == null) throw new AppException("DB is empty");
         return appDb.getUsers().values().stream().filter(user -> user.getId() == id).
                 findFirst().orElseThrow(() -> new UserNotFoundException("No user Found"));
     }
 
     @Override
-    public Order getOrderById(int id) throws OrderNotFoundException {
-
+    public Order getOrderById(int id) throws AppException {
+        if (appDb == null) throw new AppException("DB is empty");
         return appDb.getOrders().values().stream().filter(order -> order.getId() == id).
-                findFirst().orElseThrow(() -> new OrderNotFoundException("No user Found"));
+                findFirst().orElseThrow(() -> new OrderNotFoundException("No order Found"));
     }
 
     @Override
-    public Map<Integer, Order> filterByName(String name) throws OrderNotFoundException {
+    public Map<Integer, Order> filterByName(String name) throws AppException {
+        if (appDb == null) throw new AppException("DB is empty");
+
         Map<Integer, Order> result = new HashMap<>();
 
         appDb.getOrders().values().stream().filter(order -> order.getSenderName().equals(name))
@@ -58,7 +59,9 @@ public class MainControllerImpl implements MainController {
     }
 
     @Override
-    public Map<Integer, Order> filterByCity(String city) throws OrderNotFoundException {
+    public Map<Integer, Order> filterByCity(String city) throws AppException {
+        if (appDb == null) throw new AppException("DB is empty");
+
         Map<Integer, Order> result = new HashMap<>();
 
         appDb.getOrders().values().stream().filter(order -> order.getTargetCity().equals(city))
@@ -67,16 +70,22 @@ public class MainControllerImpl implements MainController {
     }
 
     @Override
-    public Map<Integer, Order> filterByReceiver(String receiverName) throws OrderNotFoundException {
+    public Map<Integer, Order> filterByReceiver(String receiverName)throws AppException {
+        if (appDb == null) throw new AppException("DB is empty");
+
         Map<Integer, Order> result = new HashMap<>();
+
         appDb.getOrders().values().stream().filter(order -> order.getReceiverName().equals(receiverName))
                 .forEach(order -> result.put(order.getId(), order));
         return result;
     }
 
     @Override
-    public Map<Integer, Order> filterByDate(LocalDateTime dateTime) throws OrderNotFoundException {
+    public Map<Integer, Order> filterByDate(LocalDateTime dateTime) throws AppException {
+        if (appDb == null) throw new AppException("DB is empty");
+
         Map<Integer, Order> result = new HashMap<>();
+
         appDb.getOrders().values().stream().filter(order -> order.getSendDate().equals(dateTime))
                 .forEach(order -> result.put(order.getId(), order));
         return result;

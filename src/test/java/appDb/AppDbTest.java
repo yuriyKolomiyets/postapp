@@ -39,8 +39,8 @@ public class AppDbTest {
 
    @After
     public void after(){
-       restoreUserDb();
-       restoreOrderDb();
+      restoreUserDb();
+      restoreOrderDb();
 
     }
 
@@ -48,6 +48,8 @@ public class AppDbTest {
     public void addUser() throws AppException {
         User testUser1 = new User("test4@gmail.com", "123456");
         appDb.addUser(testUser1);
+        User testUser2 = new User("test5@gmail.com", "123456");
+        appDb.addUser(testUser2);
         assertTrue(appDb.getUsers().containsKey("test4@gmail.com"));
     }
 

@@ -19,7 +19,7 @@ public class Order {
         this.receiverName = receiverName;
         this.sendDate = LocalDateTime.now().minusDays((int)(Math.random() * DAYS));
         this.targetCity = targetCity;
-        this.id = ModelUtils.genId();
+        this.id = ModelUtils.genOrderId();
     }
 
     public OrderStatus getOrderStatus() {

@@ -4,10 +4,12 @@ import appDb.AppDbImpl;
 import controller.MainController;
 import exceptions.LoginCredentialException;
 import model.User;
+import org.apache.log4j.Logger;
 import spark.Request;
 import spark.Response;
 import utils.Factory;
 import utils.JSONUtils;
+import utils.Log4JApp;
 
 import static spark.Spark.*;
 
@@ -15,8 +17,10 @@ public class SparkServer {
 
     private final int port;
     private final String staticFolder;
-    private AppDbImpl appDb;
+    private final static Logger LOGGER = Log4JApp.getLogger(Log4JApp.class);
 
+
+    private AppDbImpl appDb;
 
     // todo  modifier
     private MainController mainController = Factory.create(appDb);
@@ -30,7 +34,6 @@ public class SparkServer {
         if(staticFolder != null) {
             externalStaticFileLocation(staticFolder);
         }
-
     }
 
     public static void main(String[] args) {
@@ -61,8 +64,7 @@ public class SparkServer {
         try {
             String key = appDb.createAccessToken(loginUser);
         } catch (LoginCredentialException e) {
-            // todo wrap an exception and return either or use spark exception resolver ()
-            e.printStackTrace();
+            LOGGER.error("Authorisation failed");
         }
         // gson.toJson(new Message("succes or token"))
         // todo return object decorated in json
@@ -73,15 +75,15 @@ public class SparkServer {
         // todo create Gson only one time and keep as a singleton
 
         String jsonRequest = request.body();
-
         User newUser = JSONUtils.fromJson(jsonRequest, User.class);
-
         boolean addUser = appDb.register(newUser.getEmail(), newUser.getPass());
 
         if(addUser) {
             response.body("User successfully registered");
+            LOGGER.info("User successfully registered");
         } else {
             response.body("User not added to db due to an error");
+            LOGGER.error("User not added to db due to an error");
         }
 
         // todo return message after register logic

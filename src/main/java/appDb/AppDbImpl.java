@@ -3,18 +3,15 @@ package appDb;
 import exceptions.AppException;
 import exceptions.LoginCredentialException;
 import exceptions.NoAccessException;
-import model.Customer;
 import model.Order;
 import model.User;
 import org.apache.log4j.Logger;
 import utils.JSONUtils;
 import utils.Log4JApp;
+import utils.MyAction;
 
 import java.io.IOException;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.UUID;
+import java.util.*;
 
 // todo figure out how to set info to logging once to all methods
 
@@ -36,33 +33,37 @@ public class AppDbImpl implements AppDb {
         accessTokenUserMap = new HashMap<>();
     }
 
+    private Object invokeUserAction(MyAction action) {
+        users = getUsersFromDb(usersDbPath);
+        Object ret = action.invoke();
+        JSONUtils.saveUsersToDb(usersDbPath, users);
+        LOGGER.info(getClass());
+        return ret;
+    }
+
+    @Override
     public User addUser(User user) throws AppException {
-        users = getUsersFromDb(usersDbPath);
-        users.put(user.getEmail(), user);
-        JSONUtils.saveUsersToDb(usersDbPath, users);
-        LOGGER.info("Method" + getClass());
-        return user;
+        return (User) invokeUserAction(() -> users.put(user.getEmail(), user));
     }
 
+    @Override
     public User removeUser(User user) {
-
-        users = getUsersFromDb(usersDbPath);
-        users.remove(user.getEmail());
-        JSONUtils.saveUsersToDb(usersDbPath, users);
-        LOGGER.info("Method" + getClass());
-        return user;
+        return (User) invokeUserAction(() -> users.remove(user.getEmail()));
     }
 
+    @Override
     public Map<String, User> getUsers() {
-        LOGGER.info("Method" + getClass());
+        LOGGER.info(getClass());
         return getUsersFromDb(usersDbPath);
     }
 
+    @Override
     public void setUsers(Map<String, User> users) {
         this.users = users;
-        LOGGER.info("Method" + getClass());
+        LOGGER.info(getClass());
     }
 
+    @Override
     public Map<String, User> getUsersFromDb(String userDbPath) {
         try {
             List<User> usersList = JSONUtils.getUsersFromDb(userDbPath);
@@ -75,9 +76,8 @@ public class AppDbImpl implements AppDb {
         return users;
     }
 
-
+    @Override
     public Order addOrder(Order order, String accessToken) throws AppException {
-
         // todo this is business logic
         if (!hasToken(accessToken)) {
             LOGGER.error("no access, login first");
@@ -92,6 +92,7 @@ public class AppDbImpl implements AppDb {
         return order;
     }
 
+    @Override
     public Map<Integer, Order> getOrdersFromDb(String ordersDbPath) {
         try {
             List<Order> ordersList = JSONUtils.getOrdersFromDb(ordersDbPath);
@@ -103,6 +104,7 @@ public class AppDbImpl implements AppDb {
         return orders;
     }
 
+    @Override
     public Order removeOrder(Order order, String accessToken) throws AppException {
         orders = getOrdersFromDb(ordersDbPath);
         if (!hasToken(accessToken)) {
@@ -115,15 +117,16 @@ public class AppDbImpl implements AppDb {
         return order;
     }
 
+    @Override
     public Map<Integer, Order> getOrders() {
         return getOrdersFromDb(ordersDbPath);
     }
 
-
+    @Override
     public String createAccessToken(User user) throws LoginCredentialException {
         User found =
                 users.values()
-                        .stream().filter(u -> u !=null)
+                        .stream().filter(Objects::nonNull)
                         .filter(u -> user.getEmail().equals(u.getEmail()))
                         .filter(u -> user.getPass().equals(u.getPass()))
                         .findFirst().orElse(null);
@@ -138,19 +141,13 @@ public class AppDbImpl implements AppDb {
         }
     }
 
+    @Override
     public boolean hasToken(String accessToken) {
         return accessTokenUserMap.containsKey(accessToken);
     }
 
     public boolean register(String email, String pass) {
-        users = getUsersFromDb(usersDbPath);
-//        users.put(email, new Customer(email, pass));
-        users.put(email, new User(email, pass));
-        JSONUtils.saveUsersToDb("TeamOne/user_db.txt", users);
-        LOGGER.info("Method" + getClass());
-
-        return true;
+        return (Boolean) invokeUserAction(() -> users.put(email, new User(email, pass)));
     }
-
 
 }

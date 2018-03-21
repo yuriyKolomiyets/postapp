@@ -18,21 +18,6 @@ public class Customer extends User {
         this.name = name;
     }
 
-    public String editUserName() {
-        return null;
-
-    }
-
-    public String editUserPhone() {
-        return null;
-
-    }
-
-    public String editUserEmail() {
-        return null;
-
-    }
-
     public String getPhone() {
         return phone;
     }

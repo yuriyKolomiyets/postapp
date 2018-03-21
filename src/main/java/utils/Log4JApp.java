@@ -8,7 +8,6 @@ public class Log4JApp {
     public static Logger getLogger(Class classForLogging) {
         return Logger.getLogger(classForLogging);
     }
-
     public static void configLogger(String pathToProperties) {
         PropertyConfigurator.configure(pathToProperties);
     }
