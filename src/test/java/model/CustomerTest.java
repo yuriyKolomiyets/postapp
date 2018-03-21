@@ -10,7 +10,7 @@ public class CustomerTest {
 
     @Test
     public void getPhone() {
-        assertEquals("123456", testUser.getPhone());
+        assertEquals("344", testUser.getPhone());
     }
 
     @Test
