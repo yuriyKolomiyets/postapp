@@ -1,5 +1,6 @@
 package appDb;
 
+import controller.MainControllerImpl;
 import exceptions.AppException;
 import exceptions.LoginCredentialException;
 import exceptions.NoAccessException;
@@ -13,8 +14,6 @@ import utils.MyAction;
 import java.io.IOException;
 import java.util.*;
 
-// todo figure out how to set info to logging once to all methods
-
 public class AppDbImpl implements AppDb {
 
     private final String usersDbPath;
@@ -24,6 +23,7 @@ public class AppDbImpl implements AppDb {
     private Map<String, User> users;
     private Map<Integer, Order> orders;
     private Map<String, User> accessTokenUserMap;
+    private MainControllerImpl mainController;
 
     public AppDbImpl() {
         this.users = new HashMap<>();
@@ -64,6 +64,17 @@ public class AppDbImpl implements AppDb {
     }
 
     @Override
+    public Map<Integer, Order> getOrders() {
+        LOGGER.info(getClass());
+        return getOrdersFromDb(ordersDbPath);
+    }
+
+    public String getOrdersDbPath() {
+        LOGGER.info(getClass());
+        return ordersDbPath;
+    }
+
+    @Override
     public Map<String, User> getUsersFromDb(String userDbPath) {
         try {
             List<User> usersList = JSONUtils.getUsersFromDb(userDbPath);
@@ -77,22 +88,6 @@ public class AppDbImpl implements AppDb {
     }
 
     @Override
-    public Order addOrder(Order order, String accessToken) throws AppException {
-        // todo this is business logic
-        if (!hasToken(accessToken)) {
-            LOGGER.error("no access, login first");
-            throw new NoAccessException("no access, login first");
-        }
-
-        orders = getOrdersFromDb(ordersDbPath);
-        orders.put(order.getId(), order);
-        JSONUtils.saveOrdersToDb(ordersDbPath, orders);
-        LOGGER.info("Method" + getClass());
-
-        return order;
-    }
-
-    @Override
     public Map<Integer, Order> getOrdersFromDb(String ordersDbPath) {
         try {
             List<Order> ordersList = JSONUtils.getOrdersFromDb(ordersDbPath);
@@ -102,24 +97,6 @@ public class AppDbImpl implements AppDb {
         }
         LOGGER.info("Method" + getClass());
         return orders;
-    }
-
-    @Override
-    public Order removeOrder(Order order, String accessToken) throws AppException {
-        orders = getOrdersFromDb(ordersDbPath);
-        if (!hasToken(accessToken)) {
-            LOGGER.error("no access, login first");
-            throw new AppException("no access, login first");
-        }
-        orders.remove(order.getId());
-        JSONUtils.saveOrdersToDb(ordersDbPath, orders);
-        LOGGER.info("Method" + getClass());
-        return order;
-    }
-
-    @Override
-    public Map<Integer, Order> getOrders() {
-        return getOrdersFromDb(ordersDbPath);
     }
 
     @Override
@@ -143,10 +120,12 @@ public class AppDbImpl implements AppDb {
 
     @Override
     public boolean hasToken(String accessToken) {
+        LOGGER.info(getClass());
         return accessTokenUserMap.containsKey(accessToken);
     }
 
     public boolean register(String email, String pass) {
+        LOGGER.info(getClass());
         return (Boolean) invokeUserAction(() -> users.put(email, new User(email, pass)));
     }
 

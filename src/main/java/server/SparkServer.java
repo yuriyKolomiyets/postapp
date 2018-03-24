@@ -50,7 +50,7 @@ public class SparkServer {
         stop();
     }
 
-    private void initEnpoint() {
+    public void initEnpoint() {
         post("/login", this::login);
         post("/register", this::register);
     }

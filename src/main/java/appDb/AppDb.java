@@ -10,7 +10,6 @@ import java.util.Map;
 
 public interface AppDb {
 
-
     User addUser(User user) throws AppException;
 
     User removeUser(User user) throws UserNotFoundException;
@@ -21,11 +20,7 @@ public interface AppDb {
 
     Map<String, User> getUsersFromDb(String userDbPath) throws AppException;
 
-    Order addOrder(Order order, String accessToken) throws AppException;
-
     Map<Integer, Order> getOrdersFromDb(String ordersDbPath) throws AppException;
-
-    Order removeOrder(Order order, String accessToken) throws AppException;
 
     Map<Integer, Order> getOrders()throws AppException;
 

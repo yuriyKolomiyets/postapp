@@ -2,11 +2,15 @@ package controller;
 
 import appDb.AppDbImpl;
 import exceptions.AppException;
+import exceptions.NoAccessException;
 import exceptions.OrderNotFoundException;
 import exceptions.UserNotFoundException;
 import model.Order;
 import model.OrderStatus;
 import model.User;
+import org.apache.log4j.Logger;
+import utils.JSONUtils;
+import utils.Log4JApp;
 
 import java.io.IOException;
 import java.time.LocalDateTime;
@@ -16,6 +20,8 @@ import java.util.Map;
 public class MainControllerImpl implements MainController {
 
     private AppDbImpl appDb;
+    private final static Logger LOGGER = Log4JApp.getLogger(Log4JApp.class);
+    private Map<Integer, Order> orders;
 
     public MainControllerImpl(AppDbImpl appDb) {
         this.appDb = appDb;
@@ -98,6 +104,33 @@ public class MainControllerImpl implements MainController {
         order.setOrderStatus(orderStatus);
         return String.valueOf(orderStatus);
     }
+
+    public Order addOrder(Order order, String accessToken) throws AppException {
+        if (!appDb.hasToken(accessToken)) {
+            LOGGER.error("no access, login first");
+            throw new NoAccessException("no access, login first");
+        }
+
+        orders = appDb.getOrdersFromDb(appDb.getOrdersDbPath());
+        orders.put(order.getId(), order);
+        JSONUtils.saveOrdersToDb(appDb.getOrdersDbPath(), orders);
+        LOGGER.info("Method" + getClass());
+
+        return order;
+    }
+
+    public Order removeOrder(Order order, String accessToken) throws AppException {
+        orders = appDb.getOrdersFromDb(appDb.getOrdersDbPath() );
+        if (!appDb.hasToken(accessToken)) {
+            LOGGER.error("no access, login first");
+            throw new AppException("no access, login first");
+        }
+        orders.remove(order.getId());
+        JSONUtils.saveOrdersToDb(appDb.getOrdersDbPath(), orders);
+        LOGGER.info("Method" + getClass());
+        return order;
+    }
+
 
 
 }

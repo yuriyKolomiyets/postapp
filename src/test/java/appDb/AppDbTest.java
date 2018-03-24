@@ -1,5 +1,7 @@
 package appDb;
 
+import controller.MainController;
+import controller.MainControllerImpl;
 import exceptions.AppException;
 import exceptions.UserNotFoundException;
 import model.Order;
@@ -18,6 +20,7 @@ import static utils.TestUtils.restoreUserDb;
 public class AppDbTest {
 
     AppDbImpl appDb = new AppDbImpl();
+    MainController mainController = new MainControllerImpl(appDb);
     User testUser = new User("test3@gmail.com", "123456");
     Order testOrder = new Order("Oleg", "Andrey", "Kyiv");
 
@@ -26,7 +29,7 @@ public class AppDbTest {
 
         appDb.addUser(testUser);
         String token = appDb.createAccessToken(testUser);
-        appDb.addOrder(testOrder, token);
+        mainController.addOrder(testOrder, token);
     }
 
    @After
@@ -51,19 +54,6 @@ public class AppDbTest {
         assertEquals(1, appDb.getUsers().size());
     }
 
-    @Test
-    public void addOrder() throws AppException {
-
-        int testOrderId = testOrder.getId();
-        assertTrue(appDb.getOrders().containsKey(testOrderId));
-    }
-
-    @Test
-    public void removeOrder() throws AppException {
-        String token = appDb.createAccessToken(testUser);
-        appDb.removeOrder(testOrder, token);
-        assertEquals(3,appDb.getOrders().size());
-    }
 
     @Test
     public void getUsers() throws AppException {
