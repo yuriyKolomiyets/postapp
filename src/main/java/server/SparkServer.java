@@ -11,6 +11,12 @@ import utils.Factory;
 import utils.JSONUtils;
 import utils.Log4JApp;
 
+import java.io.FileInputStream;
+import java.io.IOException;
+import java.io.InputStream;
+import java.util.Map;
+import java.util.Properties;
+
 import static spark.Spark.*;
 
 public class SparkServer {
@@ -18,6 +24,7 @@ public class SparkServer {
     private final static Logger LOGGER = Log4JApp.getLogger(Log4JApp.class);
 
     private AppDbImpl appDb;
+    private Map<String, User> users;
 
     // todo  modifier
     private MainController mainController = Factory.create(appDb);
@@ -35,6 +42,17 @@ public class SparkServer {
 
     public static void main(String[] args) {
 
+        Properties appProperties = new Properties();
+        try (InputStream io = new FileInputStream(args[0])) {
+            appProperties.load(io);
+        } catch (IOException e) {
+            e.printStackTrace();
+            System.exit(-1);
+        }
+
+        String pathToLog4jProperties = appProperties.getProperty("pathToLog4jProperties");
+        String pathToUsersJSON = appProperties.getProperty("pathToUsersJSON");
+        String pathToOrdersJSON = appProperties.getProperty("pathToOrdersJSON");
         String SERVER_PORT = System.getenv("PORT");
 
         if(SERVER_PORT == null){
@@ -73,7 +91,7 @@ public class SparkServer {
 
         String jsonRequest = request.body();
         User newUser = JSONUtils.fromJson(jsonRequest, User.class);
-        boolean addUser = appDb.register(newUser.getEmail(), newUser.getPass());
+        boolean addUser = register(newUser.getEmail(), newUser.getPass());
 
         if(addUser) {
             response.body("User successfully registered");
@@ -85,5 +103,11 @@ public class SparkServer {
 
         // todo return message after register logic
         return response;
+    }
+
+    public boolean register(String email, String pass) {
+        LOGGER.info(getClass());
+        users.put(email, new User(email, pass));
+        return true; // maybe we could change return val to User?
     }
 }

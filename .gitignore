@@ -5,5 +5,6 @@ out
 *.iml
 *.ipr
 *.iws
+*.txt
 .env
 .DS_Store

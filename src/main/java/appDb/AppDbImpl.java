@@ -3,40 +3,39 @@ package appDb;
 import controller.MainControllerImpl;
 import exceptions.AppException;
 import exceptions.LoginCredentialException;
-import exceptions.NoAccessException;
 import model.Order;
 import model.User;
 import org.apache.log4j.Logger;
 import utils.JSONUtils;
 import utils.Log4JApp;
 import utils.MyAction;
+import utils.PathUtils;
 
 import java.io.IOException;
 import java.util.*;
 
 public class AppDbImpl implements AppDb {
 
-    private final String usersDbPath;
-    private final String ordersDbPath;
+    private final String USERS_DB_PATH;
+    private final String ORDERS_DB_PATH;
     private final static Logger LOGGER = Log4JApp.getLogger(Log4JApp.class);
 
     private Map<String, User> users;
     private Map<Integer, Order> orders;
     private Map<String, User> accessTokenUserMap;
-    private MainControllerImpl mainController;
 
     public AppDbImpl() {
         this.users = new HashMap<>();
         this.orders = new HashMap<>();
-        this.usersDbPath = "user_db.txt";
-        this.ordersDbPath = "order_db.txt";
+        this.USERS_DB_PATH = PathUtils.getUsersDbPath();
+        this.ORDERS_DB_PATH = "order_db.txt";
         accessTokenUserMap = new HashMap<>();
     }
 
     private Object invokeUserAction(MyAction action) {
-        users = getUsersFromDb(usersDbPath);
+        users = getUsersFromDb(USERS_DB_PATH);
         Object ret = action.invoke();
-        JSONUtils.saveUsersToDb(usersDbPath, users);
+        JSONUtils.saveUsersToDb(USERS_DB_PATH, users);
         LOGGER.info(getClass());
         return ret;
     }
@@ -54,7 +53,7 @@ public class AppDbImpl implements AppDb {
     @Override
     public Map<String, User> getUsers() {
         LOGGER.info(getClass());
-        return getUsersFromDb(usersDbPath);
+        return getUsersFromDb(USERS_DB_PATH);
     }
 
     @Override
@@ -66,12 +65,12 @@ public class AppDbImpl implements AppDb {
     @Override
     public Map<Integer, Order> getOrders() {
         LOGGER.info(getClass());
-        return getOrdersFromDb(ordersDbPath);
+        return getOrdersFromDb(ORDERS_DB_PATH);
     }
 
-    public String getOrdersDbPath() {
+    public String getORDERS_DB_PATH() {
         LOGGER.info(getClass());
-        return ordersDbPath;
+        return ORDERS_DB_PATH;
     }
 
     @Override
@@ -81,7 +80,7 @@ public class AppDbImpl implements AppDb {
             usersList.forEach(user -> users.put(user.getEmail(), user));
 
         } catch (IOException e) {
-            LOGGER.error("This is Error message");
+            LOGGER.error("DB not found");
         }
         LOGGER.info("Method" + getClass());
         return users;
@@ -93,7 +92,7 @@ public class AppDbImpl implements AppDb {
             List<Order> ordersList = JSONUtils.getOrdersFromDb(ordersDbPath);
             ordersList.forEach(order -> orders.put(order.getId(), order));
         } catch (IOException e) {
-            LOGGER.error("This is Error message");
+            LOGGER.error("DB not found");
         }
         LOGGER.info("Method" + getClass());
         return orders;
@@ -122,11 +121,6 @@ public class AppDbImpl implements AppDb {
     public boolean hasToken(String accessToken) {
         LOGGER.info(getClass());
         return accessTokenUserMap.containsKey(accessToken);
-    }
-
-    public boolean register(String email, String pass) {
-        LOGGER.info(getClass());
-        return (Boolean) invokeUserAction(() -> users.put(email, new User(email, pass)));
     }
 
 }

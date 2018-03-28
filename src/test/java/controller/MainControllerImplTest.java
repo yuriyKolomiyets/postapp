@@ -47,7 +47,7 @@ public class MainControllerImplTest {
 
     @Test
     public void getAllUsers() throws AppException, IOException {
-        assertEquals(2, mainController.getAllUsers().size());
+        assertEquals(4, mainController.getAllUsers().size());
 
     }
 

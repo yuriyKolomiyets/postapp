@@ -51,7 +51,7 @@ public class AppDbTest {
     @Test
     public void removeUser() throws UserNotFoundException {
         appDb.removeUser(testUser);
-        assertEquals(1, appDb.getUsers().size());
+        assertEquals(3, appDb.getUsers().size());
     }
 
 
