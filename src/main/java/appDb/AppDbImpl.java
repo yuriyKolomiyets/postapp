@@ -1,6 +1,5 @@
 package appDb;
 
-import controller.MainControllerImpl;
 import exceptions.AppException;
 import exceptions.LoginCredentialException;
 import model.Order;
@@ -28,7 +27,7 @@ public class AppDbImpl implements AppDb {
         this.users = new HashMap<>();
         this.orders = new HashMap<>();
         this.USERS_DB_PATH = PathUtils.getUsersDbPath();
-        this.ORDERS_DB_PATH = "order_db.txt";
+        this.ORDERS_DB_PATH = PathUtils.getOrdersDbPath();
         accessTokenUserMap = new HashMap<>();
     }
 

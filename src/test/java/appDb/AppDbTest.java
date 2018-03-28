@@ -16,7 +16,6 @@ import static utils.TestUtils.restoreOrderDb;
 import static utils.TestUtils.restoreUserDb;
 
 // todo use test db file
-// remove db file in afterClass
 public class AppDbTest {
 
     AppDbImpl appDb = new AppDbImpl();
@@ -51,7 +50,7 @@ public class AppDbTest {
     @Test
     public void removeUser() throws UserNotFoundException {
         appDb.removeUser(testUser);
-        assertEquals(3, appDb.getUsers().size());
+        assertEquals(1, appDb.getUsers().size());
     }
 
 

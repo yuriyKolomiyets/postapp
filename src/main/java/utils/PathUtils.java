@@ -14,38 +14,32 @@ public class PathUtils {
 
     public static String getUsersDbPath() {
 
-        try (InputStream io = new FileInputStream(pathToProps)) {
-            appProperties.load(io);
-        } catch (IOException e) {
-            e.printStackTrace();
-            System.exit(-1);
-        }
+        loadProperty(pathToProps);
 
         return appProperties.getProperty("pathToUsersJSON");
     }
 
     public static String getOrdersDbPath() {
 
-        try (InputStream io = new FileInputStream(pathToProps)) {
-            appProperties.load(io);
-        } catch (IOException e) {
-            e.printStackTrace();
-            System.exit(-1);
-        }
+        loadProperty(pathToProps);
 
         return appProperties.getProperty("pathToOrdersJSON");
     }
 
     public static String getLog4jPath() {
 
+        loadProperty(pathToProps);
+
+        return appProperties.getProperty("pathToLog4jProperties");
+    }
+
+    private static void loadProperty (String pathToProps){
         try (InputStream io = new FileInputStream(pathToProps)) {
             appProperties.load(io);
         } catch (IOException e) {
             e.printStackTrace();
             System.exit(-1);
         }
-
-        return appProperties.getProperty("pathToLog4jProperties");
     }
 
 }

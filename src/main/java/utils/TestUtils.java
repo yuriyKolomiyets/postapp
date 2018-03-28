@@ -9,8 +9,8 @@ import java.util.List;
 
 public class TestUtils {
 
-    private final static String usersDbPath = PathUtils.getUsersDbPath();
-    private final static String ordersDbPath = PathUtils.getUsersDbPath();
+    private final static String USERS_DB_PATH = PathUtils.getUsersDbPath();
+    private final static String ORDERS_DB_PATH = PathUtils.getOrdersDbPath();
 
     public static void restoreUserDb() {
         List<User> users = new ArrayList<>();
@@ -19,7 +19,7 @@ public class TestUtils {
         users.add(new User("test@gmail.com", "123456"));
 
         try {
-            JSONUtils.writeListIntoFile(usersDbPath, users);
+            JSONUtils.writeListIntoFile(USERS_DB_PATH, users);
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -41,7 +41,7 @@ public class TestUtils {
         order3.setId(3);
 
         try {
-            JSONUtils.writeListIntoFile(ordersDbPath, orders);
+            JSONUtils.writeListIntoFile(ORDERS_DB_PATH, orders);
         } catch (IOException e) {
             e.printStackTrace();
         }

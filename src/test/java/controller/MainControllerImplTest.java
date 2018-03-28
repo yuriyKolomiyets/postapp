@@ -1,7 +1,6 @@
 package controller;
 
 import appDb.AppDbImpl;
-import com.google.gson.Gson;
 import exceptions.AppException;
 import model.Order;
 import model.User;
@@ -13,9 +12,7 @@ import org.junit.Test;
 import java.io.IOException;
 import java.time.LocalDateTime;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertThat;
-import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.*;
 import static utils.TestUtils.restoreOrderDb;
 import static utils.TestUtils.restoreUserDb;
 
@@ -40,14 +37,13 @@ public class MainControllerImplTest {
     public void after(){
         restoreUserDb();
         restoreOrderDb();
-
         appDb = null;
     }
 
 
     @Test
     public void getAllUsers() throws AppException, IOException {
-        assertEquals(4, mainController.getAllUsers().size());
+        assertEquals(2, mainController.getAllUsers().size());
 
     }
 
@@ -67,7 +63,7 @@ public class MainControllerImplTest {
     public void removeOrder() throws AppException {
         String token = appDb.createAccessToken(testUser);
         mainController.removeOrder(testOrder, token);
-        assertEquals(3,appDb.getOrders().size());
+        assertEquals(3, appDb.getOrders().size());
     }
 
     @Test

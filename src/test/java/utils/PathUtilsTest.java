@@ -9,12 +9,12 @@ public class PathUtilsTest {
 
     @Test
     public void getUsersDbPath() {
-        assertEquals("src/user_db.txt", PathUtils.getUsersDbPath());
+        assertEquals("src/main/java/user_db.txt", PathUtils.getUsersDbPath());
     }
 
     @Test
     public void getOrdersDbPath() {
-        assertEquals("src/order_db.txt", PathUtils.getOrdersDbPath());
+        assertEquals("src/main/java/order_db.txt", PathUtils.getOrdersDbPath());
 
     }
 }

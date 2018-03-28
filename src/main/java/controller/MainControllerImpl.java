@@ -14,6 +14,7 @@ import utils.Log4JApp;
 
 import java.io.IOException;
 import java.time.LocalDateTime;
+import java.util.HashMap;
 import java.util.Map;
 import java.util.stream.Collectors;
 
@@ -65,8 +66,16 @@ public class MainControllerImpl implements MainController {
     public Map<Integer, Order> filterByCity(String city) throws AppException {
         if (appDb == null) throw new AppException("DB is empty");
 
-        return appDb.getOrders().values().stream().filter(order -> order.getTargetCity().equals(city))
-                .collect(Collectors.toMap(Order::getId, order -> order));
+        Map<Integer, Order> map = new HashMap<>();
+        for (Order order : appDb.getOrders().values()) {
+            if (order.getTargetCity().equals(city)) {
+                if (map.put(order.getId(), order) != null) {
+                    throw new IllegalStateException("Duplicate key");
+                }
+                map.put(order.getId(), order);
+            }
+        }
+        return map;
     }
 
     @Override
