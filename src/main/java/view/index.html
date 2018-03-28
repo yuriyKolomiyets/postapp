@@ -161,7 +161,9 @@ function addNewUserToDb() {
 
 function userLoggedIn() {
   $('#registerForm').hide();
-  $('#authUser').show();
+<!--  $('#authUser').show();-->
+ var url = window.location.href;
+    window.location = "list.html";
   $('#loginForm').hide();
 }
 
