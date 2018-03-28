@@ -10,6 +10,7 @@ import spark.Response;
 import utils.Factory;
 import utils.JSONUtils;
 import utils.Log4JApp;
+import utils.PathUtils;
 
 import java.io.FileInputStream;
 import java.io.IOException;
@@ -26,7 +27,6 @@ public class SparkServer {
     private AppDbImpl appDb;
     private Map<String, User> users;
 
-    // todo  modifier
     private MainController mainController = Factory.create(appDb);
 
     public SparkServer(int port, String staticFolder) {
@@ -42,17 +42,10 @@ public class SparkServer {
 
     public static void main(String[] args) {
 
-        Properties appProperties = new Properties();
-        try (InputStream io = new FileInputStream(args[0])) {
-            appProperties.load(io);
-        } catch (IOException e) {
-            e.printStackTrace();
-            System.exit(-1);
-        }
+        String pathToLog4jProperties = PathUtils.getLog4jPath();
+        String pathToUsersJSON = PathUtils.getUsersDbPath();
+        String pathToOrdersJSON = PathUtils.getOrdersDbPath();
 
-        String pathToLog4jProperties = appProperties.getProperty("pathToLog4jProperties");
-        String pathToUsersJSON = appProperties.getProperty("pathToUsersJSON");
-        String pathToOrdersJSON = appProperties.getProperty("pathToOrdersJSON");
         String SERVER_PORT = System.getenv("PORT");
 
         if(SERVER_PORT == null){

@@ -68,7 +68,7 @@ public class AppDbImpl implements AppDb {
         return getOrdersFromDb(ORDERS_DB_PATH);
     }
 
-    public String getORDERS_DB_PATH() {
+    public String getordersDbPath() {
         LOGGER.info(getClass());
         return ORDERS_DB_PATH;
     }

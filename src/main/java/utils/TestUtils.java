@@ -9,8 +9,8 @@ import java.util.List;
 
 public class TestUtils {
 
-    private final static String usersDbPath = "user_db.txt";
-    private final static String ordersDbPath = "order_db.txt";
+    private final static String usersDbPath = PathUtils.getUsersDbPath();
+    private final static String ordersDbPath = PathUtils.getUsersDbPath();
 
     public static void restoreUserDb() {
         List<User> users = new ArrayList<>();

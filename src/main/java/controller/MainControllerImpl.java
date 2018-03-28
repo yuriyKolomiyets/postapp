@@ -99,22 +99,22 @@ public class MainControllerImpl implements MainController {
             throw new NoAccessException("no access, login first");
         }
 
-        orders = appDb.getOrdersFromDb(appDb.getORDERS_DB_PATH());
+        orders = appDb.getOrdersFromDb(appDb.getordersDbPath());
         orders.put(order.getId(), order);
-        JSONUtils.saveOrdersToDb(appDb.getORDERS_DB_PATH(), orders);
+        JSONUtils.saveOrdersToDb(appDb.getordersDbPath(), orders);
         LOGGER.info("Method" + getClass());
 
         return order;
     }
 
     public Order removeOrder(Order order, String accessToken) throws AppException {
-        orders = appDb.getOrdersFromDb(appDb.getORDERS_DB_PATH() );
+        orders = appDb.getOrdersFromDb(appDb.getordersDbPath() );
         if (!appDb.hasToken(accessToken)) {
             LOGGER.error("no access, login first");
             throw new AppException("no access, login first");
         }
         orders.remove(order.getId());
-        JSONUtils.saveOrdersToDb(appDb.getORDERS_DB_PATH(), orders);
+        JSONUtils.saveOrdersToDb(appDb.getordersDbPath(), orders);
         LOGGER.info("Method" + getClass());
         return order;
     }

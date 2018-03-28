@@ -14,8 +14,6 @@ public class PathUtils {
 
     public static String getUsersDbPath() {
 
-        File file = new File("app.properties");
-
         try (InputStream io = new FileInputStream(pathToProps)) {
             appProperties.load(io);
         } catch (IOException e) {
@@ -37,4 +35,17 @@ public class PathUtils {
 
         return appProperties.getProperty("pathToOrdersJSON");
     }
+
+    public static String getLog4jPath() {
+
+        try (InputStream io = new FileInputStream(pathToProps)) {
+            appProperties.load(io);
+        } catch (IOException e) {
+            e.printStackTrace();
+            System.exit(-1);
+        }
+
+        return appProperties.getProperty("pathToLog4jProperties");
+    }
+
 }
